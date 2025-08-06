@@ -48,13 +48,27 @@ export default function Lanyard({
   transparent = true,
 }: LanyardProps) {
   return (
-    <div className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center overflow-hidden">
+    <div 
+      className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center overflow-hidden"
+      style={{
+        touchAction: 'none', // Disable browser touch gestures
+        userSelect: 'none',   // Prevent text selection
+        WebkitUserSelect: 'none', // Safari support
+        WebkitTouchCallout: 'none', // Disable iOS callout
+      }}
+    >
       <Canvas
         camera={{ position, fov }}
-        gl={{ alpha: transparent }}
-        onCreated={({ gl }) =>
-          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)
-        }
+        gl={{ 
+          alpha: transparent,
+          antialias: true,
+          powerPreference: 'high-performance' // Better performance on mobile
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
+          // Optimize for touch devices
+          gl.domElement.style.touchAction = 'none';
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
@@ -114,12 +128,19 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
 
+  // Mobile detection for touch optimization
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    typeof navigator !== 'undefined' ? navigator.userAgent : ''
+  ) || (typeof window !== 'undefined' && window.innerWidth < 768);
+
+  // Optimize physics for mobile touch interaction
   const segmentProps: any = {
     type: "dynamic" as RigidBodyProps["type"],
     canSleep: true,
     colliders: false,
-    angularDamping: 4,
-    linearDamping: 4,
+    // Reduce damping on mobile for more responsive interaction
+    angularDamping: isMobile ? 2 : 4,
+    linearDamping: isMobile ? 2 : 4,
   };
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
@@ -175,10 +196,13 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
+      
+      // Enhanced sensitivity for mobile touch
+      const sensitivity = isMobile ? 1.2 : 1.0; // Increase sensitivity on mobile
       card.current?.setNextKinematicTranslation({
-        x: vec.x - dragged.x,
-        y: vec.y - dragged.y,
-        z: vec.z - dragged.z,
+        x: (vec.x - dragged.x) * sensitivity,
+        y: (vec.y - dragged.y) * sensitivity,
+        z: (vec.z - dragged.z) * sensitivity,
       });
     }
     if (fixed.current) {
@@ -263,12 +287,26 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
               drag(false);
             }}
             onPointerDown={(e: any) => {
+              // Enhanced touch/mouse interaction
+              e.stopPropagation();
               e.target.setPointerCapture(e.pointerId);
+              
+              // Provide haptic feedback on mobile devices
+              if ('vibrate' in navigator && e.pointerType === 'touch') {
+                navigator.vibrate(10); // Short vibration for touch feedback
+              }
+              
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
                   .sub(vec.copy(card.current.translation()))
               );
+            }}
+            onPointerMove={(e: any) => {
+              // Improve touch tracking sensitivity
+              if (dragged && e.pointerType === 'touch') {
+                e.stopPropagation();
+              }
             }}
           >
             <mesh geometry={nodes.card.geometry}>
