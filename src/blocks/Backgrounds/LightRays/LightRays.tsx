@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /*
 	Installed from https://reactbits.dev/ts/tailwind/
 */

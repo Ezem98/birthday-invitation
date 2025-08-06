@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unknown-property */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import {
   Environment,
@@ -12,7 +12,7 @@ import {
   CuboidCollider,
   Physics,
   RigidBody,
-  RigidBodyProps,
+  type RigidBodyProps,
   useRopeJoint,
   useSphericalJoint,
 } from "@react-three/rapier";
@@ -25,6 +25,14 @@ import cardGLB from "./card.glb";
 import lanyard from "./lanyard2.png";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
+
+// TypeScript declarations for MeshLine components
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    meshLineGeometry: any;
+    meshLineMaterial: any;
+  }
+}
 
 export interface LanyardProps {
   position?: [number, number, number];

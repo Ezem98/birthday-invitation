@@ -6,7 +6,4 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   assetsInclude: ["**/*.glb"],
-  server: {
-    allowedHosts: ["jxuysp-ip-191-85-12-58.tunnelmole.net"],
-  },
 });
