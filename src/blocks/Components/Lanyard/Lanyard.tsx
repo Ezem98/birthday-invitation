@@ -21,7 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 // replace with your own imports, see the usage snippet for details
-import cardGLB from "./card.glb";
+import cardGLB from "./card2.glb";
 import lanyard from "./lanyard2.png";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
