@@ -1,20 +1,10 @@
-import "./App.css";
-import LetterGlitch from "./blocks/Backgrounds/LetterGlitch/LetterGlitch";
-import Lanyard from "./blocks/Components/Lanyard/Lanyard";
-import {
-  LANYARD_PROPS_DESKTOP,
-  LANYARD_PROPS_MOBILE,
-  LETTER_GLITCH_PROPS,
-} from "./lib/consts";
+import { Route, Routes } from "react-router-dom";
+import GuestCard from "./components/guestCard";
 
-function App() {
+export default function App() {
   return (
-    <div className="w-full h-screen overflow-hidden">
-      <LetterGlitch {...LETTER_GLITCH_PROPS} />
-      <Lanyard {...LANYARD_PROPS_DESKTOP} />
-      <Lanyard {...LANYARD_PROPS_MOBILE} />
-    </div>
+    <Routes>
+      <Route path="/:slug" element={<GuestCard />} />
+    </Routes>
   );
 }
-
-export default App;

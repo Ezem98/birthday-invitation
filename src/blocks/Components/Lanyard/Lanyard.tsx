@@ -21,7 +21,6 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 // replace with your own imports, see the usage snippet for details
-import cardGLB from "./card2.glb";
 import lanyard from "./lanyard2.png";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
@@ -35,6 +34,7 @@ declare module "@react-three/fiber" {
 }
 
 export interface LanyardProps {
+  cardGLB: any;
   position?: [number, number, number];
   gravity?: [number, number, number];
   fov?: number;
@@ -43,6 +43,7 @@ export interface LanyardProps {
 }
 
 export default function Lanyard({
+  cardGLB,
   position = [0, 0, 30],
   gravity = [0, -40, 0],
   fov = 20,
@@ -74,7 +75,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
-          <Band />
+          <Band cardGLB={cardGLB} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -112,11 +113,12 @@ export default function Lanyard({
 }
 
 interface BandProps {
+  cardGLB: any;
   maxSpeed?: number;
   minSpeed?: number;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
+function Band({ cardGLB, maxSpeed = 50, minSpeed = 0 }: BandProps) {
   // Using "any" for refs since the exact types depend on Rapier's internals
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);

@@ -1,6 +1,7 @@
 import type { LetterGlitchProps } from "../blocks/Backgrounds/LetterGlitch/LetterGlitch";
 import type { LightRaysProps } from "../blocks/Backgrounds/LightRays/LightRays";
 import type { LanyardProps } from "../blocks/Components/Lanyard/Lanyard";
+import melanieMachadoGLB from "./cards/melanie-machado.glb";
 
 export const DESKTOP_LIGHT_RAYS: LightRaysProps = {
   raysOrigin: "top-center",
@@ -29,6 +30,7 @@ export const MOBILE_LIGHT_RAYS: LightRaysProps = {
 };
 
 export const LANYARD_PROPS_DESKTOP: LanyardProps = {
+  cardGLB: null,
   position: [0, 0, 15],
   gravity: [0, -30, 0],
   fov: 14,
@@ -37,6 +39,7 @@ export const LANYARD_PROPS_DESKTOP: LanyardProps = {
 };
 
 export const LANYARD_PROPS_MOBILE: LanyardProps = {
+  cardGLB: null,
   position: [0, 0, 15],
   gravity: [0, -30, 0],
   fov: 16,
@@ -51,3 +54,10 @@ export const LETTER_GLITCH_PROPS: LetterGlitchProps = {
   smooth: true,
   glitchColors: ["#2b4539", "#61dca3", "#61b3dc"],
 };
+
+export const GUESTS = [
+  {
+    slug: "melanie-machado",
+    glb: melanieMachadoGLB,
+  },
+];
