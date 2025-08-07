@@ -48,26 +48,26 @@ export default function Lanyard({
   transparent = true,
 }: LanyardProps) {
   return (
-    <div 
+    <div
       className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center overflow-hidden"
       style={{
-        touchAction: 'none', // Disable browser touch gestures
-        userSelect: 'none',   // Prevent text selection
-        WebkitUserSelect: 'none', // Safari support
-        WebkitTouchCallout: 'none', // Disable iOS callout
+        touchAction: "none", // Disable browser touch gestures
+        userSelect: "none", // Prevent text selection
+        WebkitUserSelect: "none", // Safari support
+        WebkitTouchCallout: "none", // Disable iOS callout
       }}
     >
       <Canvas
         camera={{ position, fov }}
-        gl={{ 
+        gl={{
           alpha: transparent,
           antialias: true,
-          powerPreference: 'high-performance' // Better performance on mobile
+          powerPreference: "high-performance", // Better performance on mobile
         }}
         onCreated={({ gl }) => {
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
           // Optimize for touch devices
-          gl.domElement.style.touchAction = 'none';
+          gl.domElement.style.touchAction = "none";
         }}
       >
         <ambientLight intensity={Math.PI} />
@@ -123,15 +123,23 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
   const j3 = useRef<any>(null);
   const card = useRef<any>(null);
 
+  // Card flip state
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [flipRotation, setFlipRotation] = useState(0);
+  const lastTapTime = useRef(0);
+  const flipAnimationRef = useRef<number | null>(null);
+
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
 
   // Mobile detection for touch optimization
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    typeof navigator !== 'undefined' ? navigator.userAgent : ''
-  ) || (typeof window !== 'undefined' && window.innerWidth < 768);
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      typeof navigator !== "undefined" ? navigator.userAgent : ""
+    ) ||
+    (typeof window !== "undefined" && window.innerWidth < 768);
 
   // Optimize physics for mobile touch interaction
   const segmentProps: any = {
@@ -154,6 +162,60 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
         new THREE.Vector3(),
       ])
   );
+
+  // Function to handle card flip animation
+  const flipCard = () => {
+    if (flipAnimationRef.current) {
+      cancelAnimationFrame(flipAnimationRef.current);
+    }
+
+    const targetRotation = isFlipped ? 0 : Math.PI;
+    const startRotation = flipRotation;
+    const startTime = Date.now();
+    const duration = 600; // Animation duration in ms
+
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Easing function for smooth animation
+      const easeInOutCubic = (t: number) => {
+        return t < 0.5
+          ? 4 * t * t * t
+          : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
+      };
+
+      const easedProgress = easeInOutCubic(progress);
+      const currentRotation =
+        startRotation + (targetRotation - startRotation) * easedProgress;
+
+      setFlipRotation(currentRotation);
+
+      if (progress < 1) {
+        flipAnimationRef.current = requestAnimationFrame(animate);
+      } else {
+        setIsFlipped(!isFlipped);
+        flipAnimationRef.current = null;
+      }
+    };
+
+    animate();
+  };
+
+  // Function to detect double tap/click
+  const handleCardInteraction = (e: any) => {
+    const currentTime = Date.now();
+    const timeDiff = currentTime - lastTapTime.current;
+
+    if (timeDiff < 300) {
+      // Double tap detected within 300ms
+      e.stopPropagation();
+      flipCard();
+    }
+
+    lastTapTime.current = currentTime;
+  };
+
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
 
@@ -170,7 +232,15 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
     };
 
     window.addEventListener("resize", handleResize);
-    return (): void => window.removeEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (flipAnimationRef.current) {
+        cancelAnimationFrame(flipAnimationRef.current);
+      }
+    };
   }, []);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
@@ -196,7 +266,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
       dir.copy(vec).sub(state.camera.position).normalize();
       vec.add(dir.multiplyScalar(state.camera.position.length()));
       [card, j1, j2, j3, fixed].forEach((ref) => ref.current?.wakeUp());
-      
+
       // Enhanced sensitivity for mobile touch
       const sensitivity = isMobile ? 1.2 : 1.0; // Increase sensitivity on mobile
       card.current?.setNextKinematicTranslation({
@@ -280,6 +350,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
           <group
             scale={2.25}
             position={[0, -1.2, -0.05]}
+            rotation={[0, flipRotation, 0]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
             onPointerUp={(e: any) => {
@@ -290,12 +361,15 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
               // Enhanced touch/mouse interaction
               e.stopPropagation();
               e.target.setPointerCapture(e.pointerId);
-              
+
+              // Handle double tap for card flip
+              handleCardInteraction(e);
+
               // Provide haptic feedback on mobile devices
-              if ('vibrate' in navigator && e.pointerType === 'touch') {
+              if ("vibrate" in navigator && e.pointerType === "touch") {
                 navigator.vibrate(10); // Short vibration for touch feedback
               }
-              
+
               drag(
                 new THREE.Vector3()
                   .copy(e.point)
@@ -304,7 +378,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
             }}
             onPointerMove={(e: any) => {
               // Improve touch tracking sensitivity
-              if (dragged && e.pointerType === 'touch') {
+              if (dragged && e.pointerType === "touch") {
                 e.stopPropagation();
               }
             }}
