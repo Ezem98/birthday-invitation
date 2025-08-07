@@ -1,17 +1,12 @@
 import "./App.css";
-import LightRays from "./blocks/Backgrounds/LightRays/LightRays";
+import LetterGlitch from "./blocks/Backgrounds/LetterGlitch/LetterGlitch";
 import Lanyard from "./blocks/Components/Lanyard/Lanyard";
-import {
-  DESKTOP_LIGHT_RAYS,
-  LANYARD_PROPS,
-  MOBILE_LIGHT_RAYS,
-} from "./lib/consts";
+import { LANYARD_PROPS, LETTER_GLITCH_PROPS } from "./lib/consts";
 
 function App() {
   return (
     <div className="w-full h-screen overflow-hidden">
-      <LightRays {...DESKTOP_LIGHT_RAYS} />
-      <LightRays {...MOBILE_LIGHT_RAYS} />
+      <LetterGlitch {...LETTER_GLITCH_PROPS} />
       <Lanyard {...LANYARD_PROPS} />
     </div>
   );

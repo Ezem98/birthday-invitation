@@ -1,3 +1,4 @@
+import type { LetterGlitchProps } from "../blocks/Backgrounds/LetterGlitch/LetterGlitch";
 import type { LightRaysProps } from "../blocks/Backgrounds/LightRays/LightRays";
 import type { LanyardProps } from "../blocks/Components/Lanyard/Lanyard";
 
@@ -32,4 +33,12 @@ export const LANYARD_PROPS: LanyardProps = {
   gravity: [0, -30, 0],
   fov: 18,
   transparent: true,
+};
+
+export const LETTER_GLITCH_PROPS: LetterGlitchProps = {
+  glitchSpeed: 80,
+  centerVignette: false,
+  outerVignette: true,
+  smooth: true,
+  glitchColors: ["#2b4539", "#61dca3", "#61b3dc"],
 };
