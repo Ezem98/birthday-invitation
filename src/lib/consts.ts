@@ -28,11 +28,20 @@ export const MOBILE_LIGHT_RAYS: LightRaysProps = {
   className: "!absolute inset-0 block lg:hidden",
 };
 
-export const LANYARD_PROPS: LanyardProps = {
+export const LANYARD_PROPS_DESKTOP: LanyardProps = {
   position: [0, 0, 15],
   gravity: [0, -30, 0],
-  fov: 18,
+  fov: 14,
   transparent: true,
+  className: "hidden lg:block",
+};
+
+export const LANYARD_PROPS_MOBILE: LanyardProps = {
+  position: [0, 0, 15],
+  gravity: [0, -30, 0],
+  fov: 16,
+  transparent: true,
+  className: "block lg:hidden",
 };
 
 export const LETTER_GLITCH_PROPS: LetterGlitchProps = {

@@ -39,6 +39,7 @@ export interface LanyardProps {
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
+  className?: string;
 }
 
 export default function Lanyard({
@@ -46,10 +47,11 @@ export default function Lanyard({
   gravity = [0, -40, 0],
   fov = 20,
   transparent = true,
+  className = "",
 }: LanyardProps) {
   return (
     <div
-      className="relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center overflow-hidden"
+      className={`relative z-0 w-full h-screen flex justify-center items-center transform scale-100 origin-center overflow-hidden ${className}`}
       style={{
         touchAction: "none", // Disable browser touch gestures
         userSelect: "none", // Prevent text selection
