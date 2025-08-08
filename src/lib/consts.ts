@@ -1,6 +1,7 @@
 import type { LetterGlitchProps } from "../blocks/Backgrounds/LetterGlitch/LetterGlitch";
 import type { LightRaysProps } from "../blocks/Backgrounds/LightRays/LightRays";
 import type { LanyardProps } from "../blocks/Components/Lanyard/Lanyard";
+import type { FuzzyTextProps } from "../blocks/TextAnimations/FuzzyText/FuzzyText";
 import melanieMachadoGLB from "./cards/melanie-machado.glb";
 
 export const DESKTOP_LIGHT_RAYS: LightRaysProps = {
@@ -61,3 +62,17 @@ export const GUESTS = [
     glb: melanieMachadoGLB,
   },
 ];
+
+export const FUZZY_TEXT_NOT_FOUND_DESKTOP_PROPS: FuzzyTextProps = {
+  baseIntensity: 0.2,
+  hoverIntensity: 0.5,
+  enableHover: true,
+  fontSize: "clamp(2rem, 4vw, 6rem)",
+  enableWrap: true,
+  children: "Invitado no encontrado",
+};
+
+export const FUZZY_TEXT_NOT_FOUND_MOBILE_PROPS: FuzzyTextProps = {
+  ...FUZZY_TEXT_NOT_FOUND_DESKTOP_PROPS,
+  fontSize: "clamp(2rem, 6vw, 8rem)",
+};
