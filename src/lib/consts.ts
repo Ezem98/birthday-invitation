@@ -4,7 +4,6 @@ import type { LanyardProps } from "../blocks/Components/Lanyard/Lanyard";
 import type { DecryptedTextProps } from "../blocks/TextAnimations/DecryptedText/DecryptedText";
 import type { FuzzyTextProps } from "../blocks/TextAnimations/FuzzyText/FuzzyText";
 import bautistaCampetelliGLB from "./cards/bautista-campetelli.glb";
-import cardGLB from "./cards/card.glb";
 import carlosChonaGLB from "./cards/carlos-chona.glb";
 import diegoCarboneGLB from "./cards/diego-carbone.glb";
 import elizabethGamarraGLB from "./cards/elizabeth-gamarra.glb";
@@ -18,7 +17,7 @@ import lucilaCarboneGLB from "./cards/lucila-carbone.glb";
 import mauricioHerreraGLB from "./cards/mauricio-herrera.glb";
 import mauroCarmonaGLB from "./cards/mauro-carmona.glb";
 import melanieMachadoGLB from "./cards/melanie-machado.glb";
-import nancyGimenezGLB from "./cards/nancy-gimenez.glb";
+import nancyRodriguezGLB from "./cards/nancy-rodriguez.glb";
 import santiagoDallaglioGLB from "./cards/santiago-dallaglio.glb";
 import sheilaLeguizamonGLB from "./cards/sheila-leguizamon.glb";
 import tereRuloGLB from "./cards/tere-rulo.glb";
@@ -86,10 +85,6 @@ export const GUESTS = [
     glb: bautistaCampetelliGLB,
   },
   {
-    slug: "card",
-    glb: cardGLB,
-  },
-  {
     slug: "carlos-chona",
     glb: carlosChonaGLB,
   },
@@ -138,8 +133,8 @@ export const GUESTS = [
     glb: mauroCarmonaGLB,
   },
   {
-    slug: "nancy-gimenez",
-    glb: nancyGimenezGLB,
+    slug: "nancy-rodriguez",
+    glb: nancyRodriguezGLB,
   },
   {
     slug: "santiago-dallaglio",
