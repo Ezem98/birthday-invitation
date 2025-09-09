@@ -5,7 +5,7 @@
 import { motion, type HTMLMotionProps } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
-interface DecryptedTextProps extends HTMLMotionProps<"span"> {
+export interface DecryptedTextProps extends HTMLMotionProps<"span"> {
   text: string;
   speed?: number;
   maxIterations?: number;
@@ -33,17 +33,38 @@ export default function DecryptedText({
   animateOn = "hover",
   ...props
 }: DecryptedTextProps) {
-  const [displayText, setDisplayText] = useState<string>(text);
+  const [displayText, setDisplayText] = useState<string>("");
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isScrambling, setIsScrambling] = useState<boolean>(false);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(
     new Set()
   );
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const containerRef = useRef<HTMLSpanElement>(null);
 
+  // Initialize with scrambled text
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    const availableChars = useOriginalCharsOnly
+      ? Array.from(new Set(text.split(""))).filter((char) => char !== " ")
+      : characters.split("");
+
+    const initialScrambled = text
+      .split("")
+      .map((char) => {
+        if (char === " ") return " ";
+        return availableChars[
+          Math.floor(Math.random() * availableChars.length)
+        ];
+      })
+      .join("");
+
+    setDisplayText(initialScrambled);
+    setIsInitialized(true);
+  }, [text, characters, useOriginalCharsOnly]);
+
+  useEffect(() => {
+    let interval: number;
     let currentIteration = 0;
 
     const getNextIndex = (revealedSet: Set<number>): number => {
@@ -128,7 +149,7 @@ export default function DecryptedText({
 
     if (isHovering) {
       setIsScrambling(true);
-      interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setRevealedIndices((prevRevealed) => {
           if (sequential) {
             if (prevRevealed.size < text.length) {
@@ -138,7 +159,7 @@ export default function DecryptedText({
               setDisplayText(shuffleText(text, newRevealed));
               return newRevealed;
             } else {
-              clearInterval(interval);
+              window.clearInterval(interval);
               setIsScrambling(false);
               return prevRevealed;
             }
@@ -146,7 +167,7 @@ export default function DecryptedText({
             setDisplayText(shuffleText(text, prevRevealed));
             currentIteration++;
             if (currentIteration >= maxIterations) {
-              clearInterval(interval);
+              window.clearInterval(interval);
               setIsScrambling(false);
               setDisplayText(text);
             }
@@ -155,13 +176,30 @@ export default function DecryptedText({
         });
       }, speed);
     } else {
-      setDisplayText(text);
+      // Reset to scrambled text when not hovering
+      if (isInitialized) {
+        const availableChars = useOriginalCharsOnly
+          ? Array.from(new Set(text.split(""))).filter((char) => char !== " ")
+          : characters.split("");
+
+        const scrambledText = text
+          .split("")
+          .map((char) => {
+            if (char === " ") return " ";
+            return availableChars[
+              Math.floor(Math.random() * availableChars.length)
+            ];
+          })
+          .join("");
+
+        setDisplayText(scrambledText);
+      }
       setRevealedIndices(new Set());
       setIsScrambling(false);
     }
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (interval) window.clearInterval(interval);
     };
   }, [
     isHovering,
@@ -172,6 +210,7 @@ export default function DecryptedText({
     revealDirection,
     characters,
     useOriginalCharsOnly,
+    isInitialized,
   ]);
 
   useEffect(() => {

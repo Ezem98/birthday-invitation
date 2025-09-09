@@ -21,7 +21,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 // replace with your own imports, see the usage snippet for details
-import lanyard from "./lanyard2.png";
+import lanyard from "./lanyard3.png";
 
 extend({ MeshLineGeometry, MeshLineMaterial });
 
