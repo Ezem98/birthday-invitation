@@ -60,8 +60,10 @@ export default function Lanyard({
         WebkitTouchCallout: "none", // Disable iOS callout
       }}
     >
-      <section className="text-amber-[#f5e9da] font-bold absolute top-[65%] left-[42%] translate-x-[50%] flex items-center justify-center rotate-90">
-        <p>Tocar rápido dos veces la tarjeta para ver el detalle.</p>
+      <section className="h-fit text-amber-[#f5e9da] font-bold absolute top-[65%] right-[4%] sm:right-[38%] z-10 overflow-visible translate-x-[50%] flex items-center justify-center rotate-90 border">
+        <p className="text-center absolute z-10 text-nowrap">
+          Tocar rápido dos veces la tarjeta para ver el detalle.
+        </p>
       </section>
       <Canvas
         camera={{ position, fov }}
