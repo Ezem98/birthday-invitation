@@ -19,9 +19,6 @@ export default function GuestCard() {
     <div className="w-full h-screen overflow-hidden relative">
       <Lanyard {...LANYARD_PROPS_DESKTOP} cardGLB={guest.glb} />
       <Lanyard {...LANYARD_PROPS_MOBILE} cardGLB={guest.glb} />
-      <footer className="w-full h-16 text-amber-[#f5e9da] font-bold absolute bottom-0 flex items-center justify-center">
-        <p>Tocar rápido dos veces la tarjeta para ver el detalle.</p>
-      </footer>
     </div>
   );
 }

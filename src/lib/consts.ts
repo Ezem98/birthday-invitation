@@ -7,6 +7,7 @@ import bautistaCampetelliGLB from "./cards/bautista-campetelli.glb";
 import carlosChonaGLB from "./cards/carlos-chona.glb";
 import diegoCarboneGLB from "./cards/diego-carbone.glb";
 import elizabethGamarraGLB from "./cards/elizabeth-gamarra.glb";
+import equipoMonsterGLB from "./cards/equipo_monster.glb";
 import familiaLeguizamonGLB from "./cards/familia-leguizamon.glb";
 import federicoMaidanaGLB from "./cards/federico-maidana.glb";
 import gonzaloDacostaGLB from "./cards/gonzalo-dacosta.glb";
@@ -151,6 +152,10 @@ export const GUESTS = [
   {
     slug: "valentin-miragaya",
     glb: valentinMiragayaGLB,
+  },
+  {
+    slug: "equipo-monster",
+    glb: equipoMonsterGLB,
   },
 ];
 
